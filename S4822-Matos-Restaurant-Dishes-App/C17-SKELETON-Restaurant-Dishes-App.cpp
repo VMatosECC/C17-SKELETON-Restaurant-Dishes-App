@@ -8,6 +8,7 @@
 #include <vector>
 using namespace std;
 
+//------------------------------------------------------------------------------
 class Dish
 {
 private:
@@ -36,7 +37,7 @@ public:
             << ", Calories: " << calories << ", Price: " << price << "]\n";
     }
 
-};//--------------------------------------------------------------------
+};//------------------------------------------------------------------------------
 class Restaurant
 {
 private:
@@ -105,14 +106,18 @@ public:
     }
 };
 
-
-
-
+//---------------------------------------------------------------------------------------
 void experiment02()
 {
-    //TODO - Read dishes file, create a vector<Triplets<string, string, string>> container
-    //       Create a restaurant
-    //       Add individual dishes from db.
+    //TODO - Read dishes file, 
+    //       create a vector<Quad<string, string, string>> quadDb
+    //       some of those records may be rejected later.
+    //       Process each “raw” records from the quadDb vector
+    //       Reject record when calories > 700 or price > 24.00
+    //       Add valid dishes from quadDb to dishDb.
+    //       Create a restaurant. Add "good" dishes from dishDb 
+    //       (one at a time, or all at once)
+
 
     vector<Quad<string, string, string, string>> quadDb;
     vector<Dish> dishDb;
@@ -154,13 +159,21 @@ void experiment02()
     cout << "dishDb size is " << dishDb.size() << endl;
 
 }
+//---------------------------------------------------------------------------------------
+void experiment03()
+{
+    //TODO - Read instructions listed in the main function
+}
 
-
-
+//---------------------------------------------------------------------------------------
 int main()
 {
     //experiment01();   //NAIVE code - will fail when exceptions are thrown
     experiment02();
+    //experiment03();  //Franchise - Read raw restaurant data from disk file 
+                       //Reject restaurants located in Sringfield and Ohio
+                       //Add all valid dishes to valid restaurants.
+
 
     cout << "\nAll done!\n";
 }

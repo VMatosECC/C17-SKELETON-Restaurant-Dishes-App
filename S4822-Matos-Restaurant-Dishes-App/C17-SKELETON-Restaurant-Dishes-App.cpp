@@ -20,7 +20,7 @@ private:
 public:
     Dish(string n = "NoName", string d = "NoDescription", int c = 0, double p = 1.00)
         : name(n), description(d), calories(c), price(p) {
-    //TODO-validate data - if needed!
+        //TODO-validate data - if needed!
         if (calories > 700) {
             throw runtime_error("Too many calories " + name);
         }
@@ -51,10 +51,16 @@ public:
         string p = "NoPhoneYet", vector<Dish*> m = {})
         : name(n), address(a), phone(p), menu(m) {
         //TODO-validation logic goes here
+        //Reject Ohio addresses
+        string invalidState = "OH";
+        if (address.find(invalidState) != string::npos) {
+            throw runtime_error("Invalid State ");
+        }
+
     }
 
     void display() {
-        cout << "\nRestaurant[Name: " << name 
+        cout << "\nRestaurant[Name: " << name
             << ", Address:" << address << ", Phone: " << phone << endl;
 
         for (Dish* pd : menu) { cout << "\n\t"; pd->display(); }
@@ -101,18 +107,18 @@ public:
         : first(v1), second(v2), third(v3), fourth(v4) {}
 
     void display() {
-        cout << "<" << first << ", " << second << ", " 
+        cout << "<" << first << ", " << second << ", "
             << third << ", " << fourth << "\n";
     }
 };
 
 //---------------------------------------------------------------------------------------
-void experiment02()
+void experiment02(vector<Dish*>& dishDb)
 {
     //TODO - Read dishes file, 
     //       create a vector<Quad<string, string, string>> quadDb
     //       some of those records may be rejected later.
-    //       Process each “raw” records from the quadDb vector
+    //       Process each â€œrawâ€ records from the quadDb vector
     //       Reject record when calories > 700 or price > 24.00
     //       Add valid dishes from quadDb to dishDb.
     //       Create a restaurant. Add "good" dishes from dishDb 
@@ -120,7 +126,7 @@ void experiment02()
 
 
     vector<Quad<string, string, string, string>> quadDb;
-    vector<Dish> dishDb;
+    //vector<Dish> dishDb;
 
     ifstream mydiskfile("c:/temp/dishes.txt");
     if (!mydiskfile) {
@@ -134,8 +140,8 @@ void experiment02()
         getline(mydiskfile, strCal);
         getline(mydiskfile, strPri);
 
-        auto qRecord = Quad<string, string, string,string>
-                       (strName, strDesc, strCal, strPri);
+        auto qRecord = Quad<string, string, string, string>
+            (strName, strDesc, strCal, strPri);
 
         quadDb.push_back(qRecord);
     }
@@ -146,8 +152,8 @@ void experiment02()
     {
         try {
             auto q = quadDb[i];
-            dishDb.push_back(Dish(q.first, q.second,
-                                  stoi(q.third), stod(q.fourth)));
+            dishDb.push_back(new Dish(q.first, q.second,
+                stoi(q.third), stod(q.fourth)));
 
         }
         catch (exception& e) {
@@ -160,21 +166,48 @@ void experiment02()
 
 }
 //---------------------------------------------------------------------------------------
-void experiment03()
+void experiment03(vector<Restaurant>& restDb, vector<Dish*>& dishDb)
 {
     //TODO - Read instructions listed in the main function
+    ifstream mydiskfile("c:/temp/restaurants.txt");
+    if (!mydiskfile) {
+        cout << "Severe error - file not found \n";
+        exit(102);
+    }
+
+    string strName, strAddress, strPhone;
+    while (getline(mydiskfile, strName)) {
+        getline(mydiskfile, strAddress);
+        getline(mydiskfile, strPhone);
+
+        try {
+            //TODO Add menu to restaurant
+            restDb.push_back(Restaurant(strName, strAddress, strPhone));
+        }
+        catch (exception& e) {
+            cout << "Problem - Call a manager - " << e.what() << endl;
+        }
+
+    }
+    mydiskfile.close();
+
 }
 
 //---------------------------------------------------------------------------------------
 int main()
 {
     //experiment01();   //NAIVE code - will fail when exceptions are thrown
-    experiment02();
-    //experiment03();  //Franchise - Read raw restaurant data from disk file 
+    
+    vector<Dish*> dishDb;
+    experiment02(dishDb);     //Create a dishDB vector holding valid dishes
+
+    vector<Restaurant> restDb;
+    experiment03(restDb, dishDb);  
+                       //Franchise - Read raw restaurant data from disk file 
                        //Reject restaurants located in Sringfield and Ohio
                        //Add all valid dishes to valid restaurants.
 
+    //TODO - Add valid dishes to each valid restaurant!
 
     cout << "\nAll done!\n";
 }
-

@@ -18,15 +18,12 @@ private:
 
 public:
     Dish(string n = "NoName", string d = "NoDescription", int c = 0, double p = 1.00)
-        : name(n), description(d) {
+        : name(n), description(d), calories(c), price(p) {
     //TODO-validate data - if needed!
-        calories = c;
-        price = p;
-
         if (calories > 700) {
             throw runtime_error("Too many calories " + name);
         }
-        if (price > 25.00) {
+        if (price > 24.00) {
             throw runtime_error("Too expensive " + name);
         }
 
@@ -162,7 +159,7 @@ void experiment02()
 
 int main()
 {
-    experiment01();
+    //experiment01();   //NAIVE code - will fail when exceptions are thrown
     experiment02();
 
     cout << "\nAll done!\n";
